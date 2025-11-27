@@ -77,6 +77,31 @@ activities = {
     }
 }
 
+# In-memory country/city database
+data = {
+    "United States": {
+        "New York": {"population": 8336817},
+        "Los Angeles": {"population": 3979576},
+        "Chicago": {"population": 2693976}
+    },
+    "Canada": {
+        "Toronto": {"population": 2930000},
+        "Vancouver": {"population": 675000},
+        "Montreal": {"population": 4290000}
+    },
+    "United Kingdom": {
+        "London": {"population": 9002488},
+        "Manchester": {"population": 547627},
+        "Birmingham": {"population": 1141816}
+    },
+    "Spain": {
+        "Madrid": {"population": 3223000},
+        "Barcelona": {"population": 1620000},
+        "Seville": {"population": 1538000},
+        "Valencia": {"population": 1604000}
+    }
+}
+
 
 @app.get("/")
 def root():
@@ -86,6 +111,16 @@ def root():
 @app.get("/activities")
 def get_activities():
     return activities
+
+
+@app.get("/countries/{country}")
+def cities(country: str):
+    """
+    Return the list of cities for a given country/region.
+    """
+    if country not in data:
+        raise HTTPException(status_code=404, detail="Country not found")
+    return list(data[country].keys())
 
 
 @app.post("/activities/{activity_name}/signup")
